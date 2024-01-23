@@ -4,12 +4,13 @@ import os
 from pyvis.network import Network
 import streamlit.components.v1 as components
 
+
 # Set Google API key
 GOOGLE_API_KEY = os.getenv("api_key")
-os.environ["api_key"] = GOOGLE_API_KEY
+os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
 # Download PDFReader
-PDFReader = download_loader("PDFReader")
+PDFReader = download_loader("PDFReader", custom_path='.')
 
 # Create the Gemini model
 from llama_index.llms import Gemini
