@@ -1,3 +1,4 @@
--q llama-index google-generativeai
+llama-index
+google-generativeai
 pyvis
 streamlit
