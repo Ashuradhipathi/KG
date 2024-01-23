@@ -1,0 +1,3 @@
+-q llama-index google-generativeai
+pyvis
+streamlit

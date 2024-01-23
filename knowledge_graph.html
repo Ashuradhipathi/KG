@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "CountVectorizer", "label": "CountVectorizer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "text into a matrix of token counts", "label": "text into a matrix of token counts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "method", "label": "method", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "text into matrix", "label": "text into matrix", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "dictionary of words", "label": "dictionary of words", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "vectorizer", "label": "vectorizer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "TfidfVectorizer", "label": "TfidfVectorizer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "HashingVectorizer", "label": "HashingVectorizer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Term Frequency-Inverse Document Frequency value for each word", "label": "Term Frequency-Inverse Document Frequency value for each word", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "TF-IDF value", "label": "TF-IDF value", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "text into a matrix of token occurrences", "label": "text into a matrix of token occurrences", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "hashing trick", "label": "hashing trick", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "memory-efficient", "label": "memory-efficient", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "TF-IDF", "label": "TF-IDF", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "statistical measure", "label": "statistical measure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "importance of word", "label": "importance of word", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "BernoulliNB", "label": "BernoulliNB", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Naive Bayes classifier", "label": "Naive Bayes classifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "classification tasks", "label": "classification tasks", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "RandomForestClassifier", "label": "RandomForestClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "AdaBoostClassifier", "label": "AdaBoostClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "meta estimator", "label": "meta estimator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ExtraTreesClassifier", "label": "ExtraTreesClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "meta-estimator", "label": "meta-estimator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "BaggingClassifier", "label": "BaggingClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ensemble meta-estimator", "label": "ensemble meta-estimator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "base classifiers", "label": "base classifiers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "random subsets of original dataset", "label": "random subsets of original dataset", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "individual predictions", "label": "individual predictions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "by voting", "label": "by voting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "by averaging", "label": "by averaging", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "final prediction", "label": "final prediction", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "randomized decision trees", "label": "randomized decision trees", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "various sub-samples of dataset", "label": "various sub-samples of dataset", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "averaging", "label": "averaging", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "predictive accuracy", "label": "predictive accuracy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "over-fitting", "label": "over-fitting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "GradientBoostingClassifier", "label": "GradientBoostingClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "additive model", "label": "additive model", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "in forward stage-wise fashion", "label": "in forward stage-wise fashion", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "optimization of arbitrary differentiable loss functions", "label": "optimization of arbitrary differentiable loss functions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regression tree", "label": "regression tree", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "negative gradient of given loss function", "label": "negative gradient of given loss function", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "DecisionTreeClassifier", "label": "DecisionTreeClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "classifier", "label": "classifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "decisions based on tree structure", "label": "decisions based on tree structure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "to feature in input data", "label": "to feature in input data", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "splits on feature values", "label": "splits on feature values", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "to different predictions", "label": "to different predictions", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "DummyClassifier", "label": "DummyClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "CalibratedClassifierCV", "label": "CalibratedClassifierCV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "probability calibration", "label": "probability calibration", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "with isotonic regression or sigmoid", "label": "with isotonic regression or sigmoid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "calibrated probabilities", "label": "calibrated probabilities", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "after fitting", "label": "after fitting", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "predictions using simple rules", "label": "predictions using simple rules", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "useful as simple baseline", "label": "useful as simple baseline", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "with other real classifiers", "label": "with other real classifiers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "PassiveAggressiveClassifier", "label": "PassiveAggressiveClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "online learning algorithm", "label": "online learning algorithm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "passive for correct classification outcome", "label": "passive for correct classification outcome", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "aggressive in event of miscalculation", "label": "aggressive in event of miscalculation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "and adjusts", "label": "and adjusts", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "updates that correct loss", "label": "updates that correct loss", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "very little change in norm of weight vector", "label": "very little change in norm of weight vector", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "RidgeClassifier", "label": "RidgeClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "problem as regression task", "label": "problem as regression task", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "multi-output regression in multiclass case", "label": "multi-output regression in multiclass case", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "target values", "label": "target values", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "problem", "label": "problem", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "regularized linear models", "label": "regularized linear models", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "stochastic gradient descent", "label": "stochastic gradient descent", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "SGDClassifier", "label": "SGDClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "RidgeClassifierCV", "label": "RidgeClassifierCV", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "Ridge classifier with built-in cross-validation", "label": "Ridge classifier with built-in cross-validation", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "SGD training", "label": "SGD training", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "stochastic gradient descent SGD learning", "label": "stochastic gradient descent SGD learning", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "OneVsRestClassifier", "label": "OneVsRestClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "strategy", "label": "strategy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "also known as one-vs-all", "label": "also known as one-vs-all", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "implemented in OneVsRestClassifier", "label": "implemented in OneVsRestClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "in fitting one classifier per class", "label": "in fitting one classifier per class", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "one-vs-all", "label": "one-vs-all", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "one classifier", "label": "one classifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "class", "label": "class", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "KNeighborsClassifier", "label": "KNeighborsClassifier", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "k-nearest neighbors vote", "label": "k-nearest neighbors vote", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "csv.writer", "label": "csv.writer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "CSV writer", "label": "CSV writer", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "semicolon", "label": "semicolon", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "double quote", "label": "double quote", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "header row", "label": "header row", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "csv_arr", "label": "csv_arr", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "row", "label": "row", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "fields", "label": "fields", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "special characters", "label": "special characters", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "delimiter", "label": "delimiter", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "quotechar", "label": "quotechar", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "lineterminator", "label": "lineterminator", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "default quoting mode", "label": "default quoting mode", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "csv.QUOTE_ALL", "label": "csv.QUOTE_ALL", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "csv.QUOTE_NONNUMERIC", "label": "csv.QUOTE_NONNUMERIC", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "csv.QUOTE_NONE", "label": "csv.QUOTE_NONE", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "open", "label": "open", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "file", "label": "file", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "universal newline support", "label": "universal newline support", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "if __name__ == \u0027__main__\u0027", "label": "if __name__ == \u0027__main__\u0027", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "if script is being run directly", "label": "if script is being run directly", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "code", "label": "code", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "port", "label": "port", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "\u0027PORT\u0027 environment variable", "label": "\u0027PORT\u0027 environment variable", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "CountVectorizer", "label": "converts", "title": "converts", "to": "text into a matrix of token counts", "width": 1}, {"arrows": "to", "from": "CountVectorizer", "label": "is", "title": "is", "to": "method", "width": 1}, {"arrows": "to", "from": "CountVectorizer", "label": "converts", "title": "converts", "to": "text into matrix", "width": 1}, {"arrows": "to", "from": "CountVectorizer", "label": "uses", "title": "uses", "to": "dictionary of words", "width": 1}, {"arrows": "to", "from": "CountVectorizer", "label": "is", "title": "is", "to": "vectorizer", "width": 1}, {"arrows": "to", "from": "method", "label": "is", "title": "is", "to": "TfidfVectorizer", "width": 1}, {"arrows": "to", "from": "method", "label": "is", "title": "is", "to": "HashingVectorizer", "width": 1}, {"arrows": "to", "from": "text into matrix", "label": "converts", "title": "converts", "to": "HashingVectorizer", "width": 1}, {"arrows": "to", "from": "vectorizer", "label": "is", "title": "is", "to": "TfidfVectorizer", "width": 1}, {"arrows": "to", "from": "vectorizer", "label": "is", "title": "is", "to": "HashingVectorizer", "width": 1}, {"arrows": "to", "from": "TfidfVectorizer", "label": "calculates", "title": "calculates", "to": "Term Frequency-Inverse Document Frequency value for each word", "width": 1}, {"arrows": "to", "from": "TfidfVectorizer", "label": "calculates", "title": "calculates", "to": "TF-IDF value", "width": 1}, {"arrows": "to", "from": "HashingVectorizer", "label": "converts", "title": "converts", "to": "text into a matrix of token occurrences", "width": 1}, {"arrows": "to", "from": "HashingVectorizer", "label": "uses", "title": "uses", "to": "hashing trick", "width": 1}, {"arrows": "to", "from": "HashingVectorizer", "label": "is", "title": "is", "to": "memory-efficient", "width": 1}, {"arrows": "to", "from": "TF-IDF", "label": "is", "title": "is", "to": "statistical measure", "width": 1}, {"arrows": "to", "from": "TF-IDF", "label": "reflects", "title": "reflects", "to": "importance of word", "width": 1}, {"arrows": "to", "from": "BernoulliNB", "label": "is", "title": "is", "to": "Naive Bayes classifier", "width": 1}, {"arrows": "to", "from": "BernoulliNB", "label": "is used for", "title": "is used for", "to": "classification tasks", "width": 1}, {"arrows": "to", "from": "classification tasks", "label": "is used for", "title": "is used for", "to": "RandomForestClassifier", "width": 1}, {"arrows": "to", "from": "classification tasks", "label": "is used for", "title": "is used for", "to": "AdaBoostClassifier", "width": 1}, {"arrows": "to", "from": "RandomForestClassifier", "label": "is", "title": "is", "to": "meta estimator", "width": 1}, {"arrows": "to", "from": "meta estimator", "label": "implements", "title": "implements", "to": "ExtraTreesClassifier", "width": 1}, {"arrows": "to", "from": "AdaBoostClassifier", "label": "is", "title": "is", "to": "meta-estimator", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "is", "title": "is", "to": "ensemble meta-estimator", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "fits", "title": "fits", "to": "base classifiers", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "fits", "title": "fits", "to": "random subsets of original dataset", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "aggregate", "title": "aggregate", "to": "individual predictions", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "aggregate", "title": "aggregate", "to": "by voting", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "aggregate", "title": "aggregate", "to": "by averaging", "width": 1}, {"arrows": "to", "from": "BaggingClassifier", "label": "form", "title": "form", "to": "final prediction", "width": 1}, {"arrows": "to", "from": "ExtraTreesClassifier", "label": "fits", "title": "fits", "to": "randomized decision trees", "width": 1}, {"arrows": "to", "from": "ExtraTreesClassifier", "label": "fits", "title": "fits", "to": "various sub-samples of dataset", "width": 1}, {"arrows": "to", "from": "ExtraTreesClassifier", "label": "uses", "title": "uses", "to": "averaging", "width": 1}, {"arrows": "to", "from": "ExtraTreesClassifier", "label": "improves", "title": "improves", "to": "predictive accuracy", "width": 1}, {"arrows": "to", "from": "ExtraTreesClassifier", "label": "controls", "title": "controls", "to": "over-fitting", "width": 1}, {"arrows": "to", "from": "GradientBoostingClassifier", "label": "builds", "title": "builds", "to": "additive model", "width": 1}, {"arrows": "to", "from": "GradientBoostingClassifier", "label": "builds", "title": "builds", "to": "in forward stage-wise fashion", "width": 1}, {"arrows": "to", "from": "GradientBoostingClassifier", "label": "allows", "title": "allows", "to": "optimization of arbitrary differentiable loss functions", "width": 1}, {"arrows": "to", "from": "GradientBoostingClassifier", "label": "fits", "title": "fits", "to": "regression tree", "width": 1}, {"arrows": "to", "from": "GradientBoostingClassifier", "label": "fits", "title": "fits", "to": "negative gradient of given loss function", "width": 1}, {"arrows": "to", "from": "DecisionTreeClassifier", "label": "is", "title": "is", "to": "classifier", "width": 1}, {"arrows": "to", "from": "DecisionTreeClassifier", "label": "makes", "title": "makes", "to": "decisions based on tree structure", "width": 1}, {"arrows": "to", "from": "DecisionTreeClassifier", "label": "corresponds", "title": "corresponds", "to": "to feature in input data", "width": 1}, {"arrows": "to", "from": "DecisionTreeClassifier", "label": "represents", "title": "represents", "to": "splits on feature values", "width": 1}, {"arrows": "to", "from": "DecisionTreeClassifier", "label": "leads", "title": "leads", "to": "to different predictions", "width": 1}, {"arrows": "to", "from": "classifier", "label": "is", "title": "is", "to": "DummyClassifier", "width": 1}, {"arrows": "to", "from": "CalibratedClassifierCV", "label": "performs", "title": "performs", "to": "probability calibration", "width": 1}, {"arrows": "to", "from": "CalibratedClassifierCV", "label": "performs", "title": "performs", "to": "with isotonic regression or sigmoid", "width": 1}, {"arrows": "to", "from": "CalibratedClassifierCV", "label": "generates", "title": "generates", "to": "calibrated probabilities", "width": 1}, {"arrows": "to", "from": "CalibratedClassifierCV", "label": "generates", "title": "generates", "to": "after fitting", "width": 1}, {"arrows": "to", "from": "DummyClassifier", "label": "makes", "title": "makes", "to": "predictions using simple rules", "width": 1}, {"arrows": "to", "from": "DummyClassifier", "label": "is", "title": "is", "to": "useful as simple baseline", "width": 1}, {"arrows": "to", "from": "DummyClassifier", "label": "compares", "title": "compares", "to": "with other real classifiers", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "is", "title": "is", "to": "online learning algorithm", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "remains", "title": "remains", "to": "passive for correct classification outcome", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "turns", "title": "turns", "to": "aggressive in event of miscalculation", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "updates", "title": "updates", "to": "and adjusts", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "makes", "title": "makes", "to": "updates that correct loss", "width": 1}, {"arrows": "to", "from": "PassiveAggressiveClassifier", "label": "causes", "title": "causes", "to": "very little change in norm of weight vector", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "treats", "title": "treats", "to": "problem as regression task", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "treats", "title": "treats", "to": "multi-output regression in multiclass case", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "converts", "title": "converts", "to": "target values", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "treats", "title": "treats", "to": "problem", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "implements", "title": "implements", "to": "regularized linear models", "width": 1}, {"arrows": "to", "from": "RidgeClassifier", "label": "implements", "title": "implements", "to": "stochastic gradient descent", "width": 1}, {"arrows": "to", "from": "regularized linear models", "label": "implements", "title": "implements", "to": "SGDClassifier", "width": 1}, {"arrows": "to", "from": "RidgeClassifierCV", "label": "is", "title": "is", "to": "Ridge classifier with built-in cross-validation", "width": 1}, {"arrows": "to", "from": "SGDClassifier", "label": "with", "title": "with", "to": "SGD training", "width": 1}, {"arrows": "to", "from": "SGDClassifier", "label": "with", "title": "with", "to": "stochastic gradient descent SGD learning", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "is", "title": "is", "to": "strategy", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "is", "title": "is", "to": "also known as one-vs-all", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "is", "title": "is", "to": "implemented in OneVsRestClassifier", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "consists", "title": "consists", "to": "in fitting one classifier per class", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "implements", "title": "implements", "to": "one-vs-all", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "fits", "title": "fits", "to": "one classifier", "width": 1}, {"arrows": "to", "from": "OneVsRestClassifier", "label": "fits", "title": "fits", "to": "class", "width": 1}, {"arrows": "to", "from": "KNeighborsClassifier", "label": "implements", "title": "implements", "to": "k-nearest neighbors vote", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "creates", "title": "creates", "to": "CSV writer", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "semicolon", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "double quote", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "writes", "title": "writes", "to": "header row", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "iterates", "title": "iterates", "to": "csv_arr", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "writes", "title": "writes", "to": "row", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "quotes", "title": "quotes", "to": "fields", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "quotes", "title": "quotes", "to": "special characters", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "quotes", "title": "quotes", "to": "delimiter", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "quotes", "title": "quotes", "to": "quotechar", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "quotes", "title": "quotes", "to": "lineterminator", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "default quoting mode", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "csv.QUOTE_ALL", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "csv.QUOTE_NONNUMERIC", "width": 1}, {"arrows": "to", "from": "csv.writer", "label": "uses", "title": "uses", "to": "csv.QUOTE_NONE", "width": 1}, {"arrows": "to", "from": "open", "label": "opens", "title": "opens", "to": "file", "width": 1}, {"arrows": "to", "from": "open", "label": "enables", "title": "enables", "to": "universal newline support", "width": 1}, {"arrows": "to", "from": "if __name__ == \u0027__main__\u0027", "label": "checks", "title": "checks", "to": "if script is being run directly", "width": 1}, {"arrows": "to", "from": "if __name__ == \u0027__main__\u0027", "label": "executes", "title": "executes", "to": "code", "width": 1}, {"arrows": "to", "from": "port", "label": "gets", "title": "gets", "to": "\u0027PORT\u0027 environment variable", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
