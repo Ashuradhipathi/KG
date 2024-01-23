@@ -2,3 +2,4 @@ llama-index
 google-generativeai
 pyvis
 streamlit
+pypdf
